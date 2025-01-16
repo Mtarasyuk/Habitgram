@@ -47,46 +47,45 @@ const Welcome = () => {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="bg-white rounded-2xl shadow-lg p-8">
-        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 mb-4">
-          {getTimeBasedGreeting()}! 
-        </h1>
-        
-        {getRandomMotivationalQuote()}
+    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-8">
+            Welcome to Habitgram
+          </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link
-            to="/daily-checkin"
-            className="block p-6 bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-[1.02]"
-          >
-            <h3 className="text-xl font-semibold text-purple-600 mb-2">Daily Check-in</h3>
-            <p className="text-gray-600">Record how you're feeling and set your intentions for the day.</p>
-          </Link>
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Get Started
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Link
+                to="/daily-check-in"
+                className="inline-flex items-center justify-center px-6 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 transition-colors"
+              >
+                Daily Check-In
+              </Link>
+              <Link
+                to="/mood-calendar"
+                className="inline-flex items-center justify-center px-6 py-4 border border-transparent text-lg font-medium rounded-lg text-purple-600 bg-purple-50 hover:bg-purple-100 transition-colors"
+              >
+                View Calendar
+              </Link>
+            </div>
+          </div>
 
-          <Link
-            to="/habits"
-            className="block p-6 bg-gradient-to-br from-blue-50 to-green-50 rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-[1.02]"
-          >
-            <h3 className="text-xl font-semibold text-blue-600 mb-2">Daily Habits</h3>
-            <p className="text-gray-600">Track your progress and maintain your streak.</p>
-          </Link>
-
-          <Link
-            to="/meditation"
-            className="block p-6 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-[1.02]"
-          >
-            <h3 className="text-xl font-semibold text-green-600 mb-2">Meditation</h3>
-            <p className="text-gray-600">Take a moment to breathe and center yourself.</p>
-          </Link>
-
-          <Link
-            to="/summary"
-            className="block p-6 bg-gradient-to-br from-pink-50 to-purple-50 rounded-xl shadow-sm hover:shadow-md transition-all hover:scale-[1.02]"
-          >
-            <h3 className="text-xl font-semibold text-pink-600 mb-2">Monthly Summary</h3>
-            <p className="text-gray-600">View your mood patterns and progress over time.</p>
-          </Link>
+          <div className="bg-white rounded-xl shadow p-6 text-sm">
+            <h3 className="font-medium text-gray-800 mb-2">Your Privacy Matters</h3>
+            <ul className="text-left text-gray-600 space-y-1 mb-2">
+              <li>✅ All data stays on your device</li>
+              <li>✅ No account required</li>
+              <li>✅ No data collection or tracking</li>
+              <li>✅ No external servers involved</li>
+            </ul>
+            <p className="text-xs text-gray-500">
+              Note: Your data is stored in your browser's local storage. Clear your browser data if you want to remove all entries.
+            </p>
+          </div>
         </div>
       </div>
     </div>

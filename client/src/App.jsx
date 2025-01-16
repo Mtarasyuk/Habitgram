@@ -63,9 +63,27 @@ function App() {
     localStorage.setItem('zenith_moods', JSON.stringify(moodData));
   }, [moodData]);
 
+  const clearAllData = () => {
+    const confirmClear = window.confirm(
+      'Are you sure you want to clear all your data? This action cannot be undone.'
+    );
+    
+    if (confirmClear) {
+      localStorage.removeItem('zenith_habits');
+      localStorage.removeItem('zenith_completions');
+      localStorage.removeItem('checkInData');
+      localStorage.removeItem('zenith_moods');
+      
+      setHabits([]);
+      setCompletions({});
+      setCheckInData({});
+      setMoodData([]);
+    }
+  };
+
   return (
     <Router>
-      <Layout>
+      <Layout clearAllData={clearAllData}>
         <Routes>
           <Route path="/" element={<Welcome />} />
           <Route 
