@@ -1,201 +1,220 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
 const DailyCheckIn = ({ checkInData, setCheckInData, currentTime, selectedDate = null, onComplete = null, isModal = false }) => {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
-  const [currentInput, setCurrentInput] = useState('');
   const [answers, setAnswers] = useState({
     mood: '',
-    energy: 0,
-    focus: 0,
+    energy: 5,
+    focus: 5,
     gratitude: '',
     intentions: ''
   });
 
-  // Use selectedDate if provided (for past entries), otherwise use current date
-  const targetDate = selectedDate || currentTime;
-  const dateStr = format(targetDate, 'yyyy-MM-dd');
-
-  const getMoodText = (emoji) => {
-    switch (emoji) {
-      case '😊': return 'Very Happy';
-      case '🙂': return 'Happy';
-      case '😐': return 'Neutral';
-      case '😔': return 'Sad';
-      case '😫': return 'Very Sad';
-      default: return 'Neutral';
-    }
-  };
-
-  const getEnergyLevel = (emoji) => {
-    switch (emoji) {
-      case '⚡️⚡️⚡️': return 10;
-      case '⚡️⚡️': return 7;
-      case '⚡️': return 4;
-      case '🔋': return 2;
-      default: return 5;
-    }
-  };
-
-  const getFocusLevel = (text) => {
-    switch (text) {
-      case 'Very focused 🎯': return 10;
-      case 'Somewhat focused 👀': return 7;
-      case 'Easily distracted 🦋': return 4;
-      case "Can't focus 😵‍💫": return 2;
-      default: return 5;
-    }
-  };
-
   const questions = [
     {
-      title: `How were you feeling on ${format(targetDate, 'MMMM d')}?`,
-      type: "mood",
-      options: ['😊', '🙂', '😐', '😔', '😫'],
-      description: "Select the emoji that best matches your mood"
+      id: 'mood',
+      question: "How are you feeling today?",
+      type: 'mood',
+      options: [
+        { value: 'great', label: 'Great 😊' },
+        { value: 'good', label: 'Good 🙂' },
+        { value: 'okay', label: 'Okay 😐' },
+        { value: 'bad', label: 'Bad 😕' },
+        { value: 'terrible', label: 'Terrible 😢' },
+        { value: 'sick', label: 'Sick 🤒' }
+      ]
     },
     {
-      title: "How was your energy level?",
-      type: "energy",
-      options: ['⚡️⚡️⚡️', '⚡️⚡️', '⚡️', '🔋'],
-      description: "Select your energy level for this day"
+      id: 'energy',
+      question: "How's your energy level?",
+      type: 'slider',
+      min: 1,
+      max: 10
     },
     {
-      title: "What was your focus level?",
-      type: "focus",
-      options: ["Very focused 🎯", "Somewhat focused 👀", "Easily distracted 🦋", "Can't focus 😵‍💫"],
-      description: "Select your ability to focus on this day"
+      id: 'focus',
+      question: "How focused do you feel?",
+      type: 'slider',
+      min: 1,
+      max: 10
     },
     {
-      title: "What were you grateful for?",
-      type: "gratitude",
-      input: true,
-      description: "Write one thing you were grateful for"
+      id: 'gratitude',
+      question: "What are you grateful for today?",
+      type: 'text',
+      placeholder: "I'm grateful for..."
     },
     {
-      title: "What was your main intention?",
-      type: "intentions",
-      input: true,
-      description: "What was your primary goal or intention"
+      id: 'intentions',
+      question: "What are your intentions for today?",
+      type: 'text',
+      placeholder: "Today, I intend to..."
     }
   ];
 
-  const handleAnswer = (value) => {
-    const currentQuestion = questions[step].type;
-    let processedValue = value;
-
-    // Process the value based on the question type
-    switch (currentQuestion) {
-      case 'mood':
-        processedValue = getMoodText(value);
-        break;
-      case 'energy':
-        processedValue = getEnergyLevel(value);
-        break;
-      case 'focus':
-        processedValue = getFocusLevel(value);
-        break;
-    }
-
-    // Update answers state
-    const newAnswers = { ...answers, [currentQuestion]: processedValue };
-    setAnswers(newAnswers);
-    
-    // Clear the current input after saving
-    setCurrentInput('');
-    
+  const handleNext = () => {
     if (step < questions.length - 1) {
-      setStep(prev => prev + 1);
+      setStep(step + 1);
     } else {
-      // Update parent state with new check-in data
-      const updatedCheckInData = {
+      const date = selectedDate || currentTime;
+      const dateStr = format(date, 'yyyy-MM-dd');
+      
+      setCheckInData({
         ...checkInData,
-        [dateStr]: {
-          ...newAnswers,
-          timestamp: targetDate.toISOString()
-        }
-      };
-      
-      // Update parent state
-      setCheckInData(updatedCheckInData);
-      
-      if (isModal && onComplete) {
+        [dateStr]: answers
+      });
+
+      if (onComplete) {
         onComplete(dateStr);
       } else {
-        // Show completion message and redirect
-        setTimeout(() => {
-          navigate('/summary');
-        }, 1000);
+        navigate('/view-calendar');
       }
     }
+  };
+
+  const handleBack = () => {
+    if (step > 0) {
+      setStep(step - 1);
+    }
+  };
+
+  const handleAnswer = (value) => {
+    setAnswers({
+      ...answers,
+      [questions[step].id]: value
+    });
   };
 
   const currentQuestion = questions[step];
 
   return (
-    <div className={`${isModal ? '' : 'max-w-2xl mx-auto'}`}>
+    <div className="max-w-2xl mx-auto">
+      {!isModal && (
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-900">Daily Check-In</h1>
+          <Link to="/" className="text-purple-600 hover:text-purple-800">
+            ← Back to Home
+          </Link>
+        </div>
+      )}
+
       <div className={`bg-white ${isModal ? '' : 'rounded-2xl shadow-lg'} p-8`}>
         {step < questions.length ? (
           <>
             <div className="mb-8">
-              <div className="flex justify-between mb-2 text-sm text-gray-500">
-                <span>{isModal ? `Entry for ${format(targetDate, 'MMMM d, yyyy')}` : 'Daily Check-in'}</span>
-                <span>{step + 1} of {questions.length}</span>
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="text-2xl font-semibold text-gray-800">
+                  {currentQuestion.question}
+                </h2>
+                <span className="text-sm text-gray-500">
+                  {step + 1} of {questions.length}
+                </span>
               </div>
+              
+              {/* Progress bar */}
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
-                  className="bg-purple-600 rounded-full h-2 transition-all duration-500"
+                  className="bg-purple-600 h-2 rounded-full transition-all"
                   style={{ width: `${((step + 1) / questions.length) * 100}%` }}
                 ></div>
               </div>
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              {currentQuestion.title}
-            </h2>
-            <p className="text-gray-600 mb-6">{currentQuestion.description}</p>
-
-            {currentQuestion.input ? (
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  className="w-full p-4 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  placeholder="Type your answer here..."
-                  value={currentInput}
-                  onChange={(e) => setCurrentInput(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && currentInput.trim() && handleAnswer(currentInput.trim())}
-                />
-                <button
-                  className="w-full py-3 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-                  onClick={() => currentInput.trim() && handleAnswer(currentInput.trim())}
-                >
-                  Continue
-                </button>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-4">
-                {currentQuestion.options.map((option, index) => (
+            {currentQuestion.type === 'mood' && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {currentQuestion.options.map((option) => (
                   <button
-                    key={index}
-                    onClick={() => handleAnswer(option)}
-                    className="p-4 text-2xl bg-gray-50 rounded-lg hover:bg-purple-50 hover:scale-105 transition-all"
+                    key={option.value}
+                    onClick={() => {
+                      handleAnswer(option.value);
+                      handleNext();
+                    }}
+                    className={`p-4 rounded-lg text-left hover:bg-purple-50 transition-colors
+                      ${answers[currentQuestion.id] === option.value ? 'bg-purple-100 border-purple-500' : 'bg-white'}
+                    `}
                   >
-                    {option}
+                    <span className="text-2xl mr-2">{option.label.split(' ')[1]}</span>
+                    <span className="text-gray-900">{option.label.split(' ')[0]}</span>
                   </button>
                 ))}
+              </div>
+            )}
+
+            {currentQuestion.type === 'slider' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-4xl">
+                    {currentQuestion.id === 'energy' ? '⚡️' : '🎯'}
+                  </span>
+                  <span className="text-2xl font-semibold text-purple-600">
+                    {answers[currentQuestion.id]}
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  min={currentQuestion.min}
+                  max={currentQuestion.max}
+                  value={answers[currentQuestion.id]}
+                  onChange={(e) => handleAnswer(parseInt(e.target.value))}
+                  className="w-full"
+                />
+                <div className="flex justify-between text-sm text-gray-500">
+                  <span>Low</span>
+                  <span>High</span>
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    onClick={handleNext}
+                    className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {currentQuestion.type === 'text' && (
+              <div className="space-y-4">
+                <textarea
+                  value={answers[currentQuestion.id]}
+                  onChange={(e) => handleAnswer(e.target.value)}
+                  placeholder={currentQuestion.placeholder}
+                  className="w-full h-32 p-4 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                ></textarea>
+                <div className="flex justify-between">
+                  <button
+                    onClick={handleBack}
+                    className="px-6 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={handleNext}
+                    className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  >
+                    {step === questions.length - 1 ? 'Finish' : 'Next'}
+                  </button>
+                </div>
               </div>
             )}
           </>
         ) : (
           <div className="text-center py-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Thank you for your entry! ✨
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Thank you for checking in!
             </h2>
-            <p className="text-gray-600">
-              {isModal ? 'Your responses have been saved.' : 'Your responses have been saved. Redirecting to your summary...'}
+            <p className="text-gray-600 mb-8">
+              Your responses have been saved.
             </p>
+            <Link
+              to="/summary"
+              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              View Summary
+            </Link>
           </div>
         )}
       </div>

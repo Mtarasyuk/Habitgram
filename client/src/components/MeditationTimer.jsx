@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 
 const MeditationTimer = () => {
   const [isRunning, setIsRunning] = useState(false);
@@ -74,6 +75,12 @@ const MeditationTimer = () => {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">Meditation Timer</h1>
+        <Link to="/" className="text-purple-600 hover:text-purple-800">
+          ← Back to Home
+        </Link>
+      </div>
       <div className="bg-white rounded-2xl shadow-lg p-8">
         <div className="text-center space-y-8">
           <h2 className="text-2xl font-bold text-gray-800">

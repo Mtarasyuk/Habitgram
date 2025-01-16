@@ -5,79 +5,49 @@ import Welcome from './components/Welcome';
 import HabitTracker from './components/HabitTracker';
 import DailyCheckIn from './components/DailyCheckIn';
 import MeditationTimer from './components/MeditationTimer';
-import MoodCalendar from './components/MoodCalendar';
-import { parseISO, isAfter, startOfDay } from 'date-fns';
+import ViewCalendar from './components/ViewCalendar';
+import MonthlyHabitSummary from './components/MonthlyHabitSummary';
 
 function App() {
-  console.log('App rendering');
-  
-  const currentTime = parseISO('2025-01-16T12:20:18-05:00'); // Using the provided current time
-  
-  // Lift state up to App level
+  // Initialize state from localStorage or with default values
   const [habits, setHabits] = useState(() => {
-    const saved = localStorage.getItem('zenith_habits');
-    return saved ? JSON.parse(saved) : [];
+    const savedHabits = localStorage.getItem('habits');
+    return savedHabits ? JSON.parse(savedHabits) : [];
   });
-  
+
   const [completions, setCompletions] = useState(() => {
-    const saved = localStorage.getItem('zenith_completions');
-    return saved ? JSON.parse(saved) : {};
+    const savedCompletions = localStorage.getItem('completions');
+    return savedCompletions ? JSON.parse(savedCompletions) : {};
   });
 
   const [checkInData, setCheckInData] = useState(() => {
-    const saved = localStorage.getItem('checkInData');
-    if (!saved) return {};
-    
-    // Filter out future entries
-    const data = JSON.parse(saved);
-    const filteredData = Object.entries(data).reduce((acc, [date, entry]) => {
-      const entryDate = parseISO(entry.timestamp);
-      if (!isAfter(startOfDay(entryDate), startOfDay(currentTime))) {
-        acc[date] = entry;
-      }
-      return acc;
-    }, {});
-    
-    return filteredData;
+    const savedCheckIns = localStorage.getItem('checkInData');
+    return savedCheckIns ? JSON.parse(savedCheckIns) : {};
   });
 
-  const [moodData, setMoodData] = useState(() => {
-    const saved = localStorage.getItem('zenith_moods');
-    return saved ? JSON.parse(saved) : [];
-  });
+  // Current time for the app
+  const currentTime = new Date('2025-01-16T15:18:59-05:00');
 
-  // Save to localStorage whenever state changes
+  // Save data to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('zenith_habits', JSON.stringify(habits));
+    localStorage.setItem('habits', JSON.stringify(habits));
   }, [habits]);
 
   useEffect(() => {
-    localStorage.setItem('zenith_completions', JSON.stringify(completions));
+    localStorage.setItem('completions', JSON.stringify(completions));
   }, [completions]);
 
   useEffect(() => {
     localStorage.setItem('checkInData', JSON.stringify(checkInData));
   }, [checkInData]);
 
-  useEffect(() => {
-    localStorage.setItem('zenith_moods', JSON.stringify(moodData));
-  }, [moodData]);
-
+  // Function to clear all data
   const clearAllData = () => {
-    const confirmClear = window.confirm(
-      'Are you sure you want to clear all your data? This action cannot be undone.'
-    );
-    
-    if (confirmClear) {
-      localStorage.removeItem('zenith_habits');
-      localStorage.removeItem('zenith_completions');
-      localStorage.removeItem('checkInData');
-      localStorage.removeItem('zenith_moods');
-      
+    if (window.confirm('Are you sure you want to clear all your data? This cannot be undone.')) {
+      localStorage.clear();
       setHabits([]);
       setCompletions({});
       setCheckInData({});
-      setMoodData([]);
     }
   };
 
@@ -89,7 +59,8 @@ function App() {
           <Route path="/daily-checkin" element={<DailyCheckIn checkInData={checkInData} setCheckInData={setCheckInData} currentTime={currentTime} />} />
           <Route path="/habits" element={<HabitTracker habits={habits} setHabits={setHabits} completions={completions} setCompletions={setCompletions} />} />
           <Route path="/meditation" element={<MeditationTimer />} />
-          <Route path="/summary" element={<MoodCalendar checkInData={checkInData} currentTime={currentTime} setCheckInData={setCheckInData} />} />
+          <Route path="/view-calendar" element={<ViewCalendar checkInData={checkInData} currentTime={currentTime} setCheckInData={setCheckInData} />} />
+          <Route path="/summary" element={<MonthlyHabitSummary habits={habits} completions={completions} />} />
         </Routes>
       </Layout>
     </Router>
