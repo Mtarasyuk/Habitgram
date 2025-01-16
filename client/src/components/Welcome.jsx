@@ -74,6 +74,40 @@ const Welcome = () => {
             </div>
           </div>
 
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Track Your Progress
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Link
+                to="/habits"
+                className="inline-flex items-center justify-center px-6 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 transition-colors"
+              >
+                Daily Habits
+              </Link>
+              <Link
+                to="/summary"
+                className="inline-flex items-center justify-center px-6 py-4 border border-transparent text-lg font-medium rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors"
+              >
+                Monthly Summary
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              Mindfulness
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Link
+                to="/meditation"
+                className="inline-flex items-center justify-center px-6 py-4 border border-transparent text-lg font-medium rounded-lg text-white bg-green-600 hover:bg-green-700 transition-colors"
+              >
+                Meditation
+              </Link>
+            </div>
+          </div>
+
           <div className="bg-white rounded-xl shadow p-6 text-sm">
             <h3 className="font-medium text-gray-800 mb-2">Your Privacy Matters</h3>
             <ul className="text-left text-gray-600 space-y-1 mb-2">

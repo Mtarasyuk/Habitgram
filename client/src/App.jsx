@@ -86,40 +86,10 @@ function App() {
       <Layout clearAllData={clearAllData}>
         <Routes>
           <Route path="/" element={<Welcome />} />
-          <Route 
-            path="/habits" 
-            element={
-              <HabitTracker 
-                habits={habits}
-                setHabits={setHabits}
-                completions={completions}
-                setCompletions={setCompletions}
-              />
-            } 
-          />
-          <Route 
-            path="/daily-checkin" 
-            element={
-              <DailyCheckIn 
-                checkInData={checkInData}
-                setCheckInData={setCheckInData}
-                currentTime={currentTime}
-              />
-            } 
-          />
-          <Route 
-            path="/meditation" 
-            element={<MeditationTimer />} 
-          />
-          <Route 
-            path="/summary" 
-            element={
-              <MoodCalendar 
-                checkInData={checkInData}
-                currentTime={currentTime}
-              />
-            } 
-          />
+          <Route path="/daily-checkin" element={<DailyCheckIn checkInData={checkInData} setCheckInData={setCheckInData} currentTime={currentTime} />} />
+          <Route path="/habits" element={<HabitTracker habits={habits} setHabits={setHabits} completions={completions} setCompletions={setCompletions} />} />
+          <Route path="/meditation" element={<MeditationTimer />} />
+          <Route path="/summary" element={<MoodCalendar checkInData={checkInData} currentTime={currentTime} setCheckInData={setCheckInData} />} />
         </Routes>
       </Layout>
     </Router>
