@@ -11,7 +11,7 @@ import { parseISO, isAfter, startOfDay } from 'date-fns';
 function App() {
   console.log('App rendering');
   
-  const currentTime = parseISO('2025-01-15T23:01:17-05:00');
+  const currentTime = parseISO('2025-01-16T12:20:18-05:00'); // Using the provided current time
   
   // Lift state up to App level
   const [habits, setHabits] = useState(() => {
