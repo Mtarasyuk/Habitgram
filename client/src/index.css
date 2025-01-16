@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4b5fd;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a78bfa;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Habit Tracker Animations */
+@keyframes confetti {
+  0% { transform: translateY(0) rotateZ(0); opacity: 1; }
+  100% { transform: translateY(-1000px) rotateZ(720deg); opacity: 0; }
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.1); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shine {
+  0% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 0; }
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  animation: confetti 1s ease-out forwards;
+}
+
+.habit-complete-animation {
+  animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.shine-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  border-radius: 50%;
+  animation: shine 0.6s ease-out forwards;
+}
+
+/* Streak Badges */
+.streak-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.streak-badge-bronze {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.streak-badge-silver {
+  @apply bg-gray-100 text-gray-800;
+}
+
+.streak-badge-gold {
+  @apply bg-yellow-400 text-yellow-900;
+}
+
+.streak-badge-diamond {
+  background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  @apply text-purple-900;
+}
+
+/* Progress Bar Animation */
+@keyframes fill-progress {
+  from { width: 0%; }
+  to { width: var(--target-width); }
+}
+
+.progress-bar-fill {
+  animation: fill-progress 1s ease-out forwards;
+}
+
+/* Category Pills */
+.category-pill {
+  @apply px-3 py-1 rounded-full text-sm font-medium transition-all;
+  animation: bounce-in 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.category-health {
+  @apply bg-green-100 text-green-800;
+}
+
+.category-productivity {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.category-mindfulness {
+  @apply bg-purple-100 text-purple-800;
+}
+
+.category-learning {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+/* Priority Indicators */
+.priority-high {
+  @apply ring-2 ring-red-500;
+}
+
+.priority-medium {
+  @apply ring-2 ring-yellow-500;
+}
+
+.priority-low {
+  @apply ring-2 ring-green-500;
+}
+
+/* Stats Card Animation */
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.stats-card {
+  animation: slide-up 0.5s ease-out forwards;
+}
+
+/* Achievement Unlock Animation */
+@keyframes achievement-unlock {
+  0% { transform: translateY(-20px); opacity: 0; }
+  10% { transform: translateY(0); opacity: 1; }
+  90% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-20px); opacity: 0; }
+}
+
+.achievement-notification {
+  animation: achievement-unlock 3s ease-out forwards;
+}
